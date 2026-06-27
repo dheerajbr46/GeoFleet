@@ -2,6 +2,7 @@ package com.geofleet.rider.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.geofleet.rider.entity.RiderStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.time.Instant;
@@ -101,6 +102,10 @@ public class GlobalExceptionHandler {
             Class<?> targetType = invalidFormatException.getTargetType();
 
             if (targetType != null && targetType.isEnum()) {
+                if ("status".equals(fieldName) && targetType == RiderStatus.class) {
+                    return Map.of(fieldName, "Rider can only set status to AVAILABLE or OFFLINE");
+                }
+
                 return Map.of(
                         fieldName,
                         "Invalid value '%s'. Accepted values: %s"

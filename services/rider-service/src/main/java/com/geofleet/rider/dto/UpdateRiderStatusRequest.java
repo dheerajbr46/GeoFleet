@@ -1,9 +1,10 @@
 package com.geofleet.rider.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.geofleet.rider.entity.RiderStatus;
+import jakarta.validation.constraints.NotNull;
 
 public record UpdateRiderStatusRequest(
-        @NotBlank String status
+        @NotNull(message = "status is required")
+        RiderStatus status
 ) {
 }
-
