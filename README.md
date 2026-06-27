@@ -7,7 +7,7 @@ The project is intentionally scaffold-first. Core business logic should be imple
 ## Current Scope
 
 - `rider-service`: Spring Boot service skeleton for rider registration, status, location, and nearby rider learning flows.
-- `docker-compose.yml`: infrastructure only, with PostgreSQL 16 and Redis 7.
+- `docker-compose.yml`: infrastructure only, with PostgreSQL 15 and Redis 7.
 - `docs/`: design notes and learning logs.
 
 ## Run Infrastructure
