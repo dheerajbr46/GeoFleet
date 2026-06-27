@@ -9,15 +9,16 @@ This document captures planned Redis key patterns. Do not treat this as final im
 - Lightweight rider state cache.
 - Time-bound dispatch coordination experiments.
 - Phase 1B live rider status stored as Redis Hash state.
+- Phase 1C rider location indexing stored in Redis GEO by city.
 
 ## Candidate Key Names
 
 ```text
-geo:riders:{city}
 rider:{riderId}:status
 rider:{riderId}:location
 riders:available:{city}
 rider:{riderId}:live
+riders:geo:{city}
 ```
 
 ## Phase 1B Live State
@@ -44,6 +45,17 @@ Reserved statuses:
 BUSY       # dispatch logic later
 SUSPENDED  # admin/account logic later
 ```
+
+## Phase 1C GEO Location
+
+`riders:geo:{city}` is reserved for Redis GEO rider location indexing.
+
+Rules:
+
+- City comes from the PostgreSQL rider profile during location update.
+- Nearby search should eventually combine Redis GEO results with Redis Hash live state.
+- Nearby search should eventually return only `AVAILABLE` and fresh riders.
+- Redis GEO write/read implementation is intentionally manual learning work.
 
 ## Open Questions
 

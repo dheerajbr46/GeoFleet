@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.geofleet.rider.entity.RiderStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Arrays;
@@ -68,6 +69,28 @@ public class GlobalExceptionHandler {
                 : "Request body contains invalid field values. Check fieldErrors for details.";
 
         ApiErrorResponse body = baseError(HttpStatus.BAD_REQUEST, message, request, fieldErrors);
+        return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiErrorResponse> handleConstraintViolation(
+            ConstraintViolationException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, String> fieldErrors = new HashMap<>();
+        ex.getConstraintViolations().forEach(violation ->
+                fieldErrors.put(
+                        violation.getPropertyPath().toString(),
+                        violation.getMessage()
+                )
+        );
+
+        ApiErrorResponse body = baseError(
+                HttpStatus.BAD_REQUEST,
+                "Request validation failed. Check fieldErrors for details.",
+                request,
+                fieldErrors
+        );
         return ResponseEntity.badRequest().body(body);
     }
 
